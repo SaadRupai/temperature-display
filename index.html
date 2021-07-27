@@ -22,20 +22,39 @@
     <div class="container">
         <form class="col-md-6 m-auto py-5">
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <input id="city-name" type="text" class="form-control" placeholder="Enter a location for Weather ...">
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-danger">Search</button>
+                    <button id="button" type="button" class="btn btn-danger">Search</button>
                 </div>
             </div>
         </form>
         <div class="weather-status text-white text-center">
             <img src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
-            <h1>Dhaka</h1>
-            <h3><span>38.06</span>&deg;C</h3>
-            <h1 class="lead">Clouds</h1>
+            <h1 id="city-name-display">Dhaka</h1>
+            <h3><span id="temp-display">38.06</span>&deg;C</h3>
+            <h1 id="description-display" class="lead">Clouds</h1>
         </div>
     </div>
 
+    <script>
+        document.getElementById('button').addEventListener('click', function () {
+            const cityName = document.getElementById('city-name').value;
+            fetch('https://api.openweathermap.org/data/2.5/weather?q='+cityName+'&appid=8f2d764807e5a624e719f79a76e148f8')
+                .then(res => res.json())
+                .then(data => {
+                    const cityNameDisplay = data.name;
+                    const tempDisplayF = data.main.temp;
+                    const tempDisplayC = ((5*(temp-32))/9);
+                    const descriptionDisplay = data.weather[0].description;
+
+                    document.getElementById('city-name-display').innerText = cityNameDisplay;
+                    document.getElementById('temp-display').innerText = tempDisplayC;
+                    document.getElementById('description-display').innerText = descriptionDisplay;
+                    
+                })
+                .catch(error => alert('Wrong City Name !'));
+        })
+    </script>
 </body>
 
 </html>
